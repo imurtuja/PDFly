@@ -176,8 +176,8 @@ pdfigo/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/imurtuja/pdfigo-v2.git
-cd pdfigo-v2
+git clone https://github.com/imurtuja/PDFigo.git
+cd PDFigo
 ```
 
 ### 2. Install Dependencies
