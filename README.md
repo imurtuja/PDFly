@@ -1,3 +1,5 @@
+<div align="center">
+
 # <img src="https://api.iconify.design/mdi:file-pdf-box.svg?color=%236366f1" width="48" align="center" /> PDFly
 
 ### *Every PDF tool you'll ever need - free, fast, and 100% private.*
@@ -174,8 +176,8 @@ pdfly/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/imurtuja/pdfly.git
-cd pdfly
+git clone https://github.com/imurtuja/PDFly.git
+cd PDFly
 ```
 
 ### 2. Install Dependencies
