@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "PDFigo by Murtuja - Free Online PDF Tools";
+export const alt = "PDFly by Murtuja - Free Online PDF Tools";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -91,7 +91,7 @@ export default async function OgImage() {
             letterSpacing: -1,
           }}
         >
-          PDFigo
+          PDFly
         </div>
 
         {/* Subtitle */}
@@ -116,7 +116,7 @@ export default async function OgImage() {
             color: "rgba(255, 255, 255, 0.35)",
           }}
         >
-          pdfigo.murtuja.in - by Murtuja
+          pdfly.murtuja.in - by Murtuja
         </div>
       </div>
     ),

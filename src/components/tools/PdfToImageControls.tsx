@@ -2,21 +2,40 @@
 
 import { useState } from "react";
 import type { ToolControlsProps } from "./types";
-import { Image as ImageIcon, Loader2, Archive } from "lucide-react";
+import { Image as ImageIcon, Loader2, Archive, Lock } from "lucide-react";
+import Link from "next/link";
 import { usePdfLoader } from "@/hooks/usePdfLoader";
 import UniversalPreview from "../pdf/UniversalPreview";
 import ToolLayout from "./ToolLayout";
+import SecurityModal from "../pdf/SecurityModal";
+import { getProtectedFiles } from "@/lib/pdf/validation";
 
 export default function PdfToImageControls({
-  files, setProcessing, processing, setProgress, setResultBlob, setResultFileName, setError,
+  files,
+  setFiles,
+  setProcessing,
+  processing,
+  setProgress,
+  setResultBlob,
+  setResultFileName,
+  setError,
 }: ToolControlsProps) {
-  const file = files[0] || null;
-  const { pages, totalPages, loading, error: loadError } = usePdfLoader(file, true, 300);
+  const file = files[0]?.file || null;
+  const { pages, totalPages, loading, error: loadError, isProtected } = usePdfLoader(file, true, 300);
+  const [securityModalOpen, setSecurityModalOpen] = useState(false);
 
   const [exportMode, setExportMode] = useState<"separate" | "combined">("separate");
 
   const handleConvert = async () => {
     if (!file) return;
+
+    // Proactive check
+    const encrypted = await getProtectedFiles([file]);
+    if (encrypted.length > 0) {
+      setSecurityModalOpen(true);
+      return;
+    }
+
     try {
       setProcessing(true); setProgress(10); setError(null);
       const pdfjsLib = await import("pdfjs-dist");
@@ -49,7 +68,7 @@ export default function PdfToImageControls({
         for (const c of allCanvases) { ctx.drawImage(c, 0, y); y += c.height; }
         const blob = await new Promise<Blob>((r) => merged.toBlob((b) => r(b!), "image/png"));
         setResultBlob(blob);
-        setResultFileName(`${baseName} - PDF to Image - PDFigo by Murtuja.png`);
+        setResultFileName(`${baseName} - PDF to Image - PDFly by Murtuja.png`);
       } else {
         const JSZip = (await import("jszip")).default;
         const zip = new JSZip();
@@ -59,12 +78,17 @@ export default function PdfToImageControls({
         }
         const zipBlob = await zip.generateAsync({ type: "blob" });
         setResultBlob(zipBlob);
-        setResultFileName(`${baseName} - PDF to Images - PDFigo by Murtuja.zip`);
+        setResultFileName(`${baseName} - PDF to Images - PDFly by Murtuja.zip`);
       }
       setProgress(100);
     } catch (err) {
       setError(`Failed: ${err instanceof Error ? err.message : "Unknown error"}`);
     } finally { setProcessing(false); }
+  };
+
+  const handleSecurityConfirm = () => {
+    setSecurityModalOpen(false);
+    setFiles([]);
   };
 
   if (!file) return null;
@@ -78,24 +102,38 @@ export default function PdfToImageControls({
           mode="grid"
         >
           <div className="w-full h-full min-h-0">
-            {loadError && <p className="text-sm text-red-400 p-4">{loadError}</p>}
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4 w-full content-start">
-              {pages.map((p) => (
-                <div key={p.pageNum} className="relative aspect-[1/1.414] bg-white rounded-lg shadow-sm border overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.dataUrl} alt={`Page ${p.pageNum}`} className="w-full h-full object-cover" />
-                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/60 px-2 py-0.5 rounded-full backdrop-blur-sm">
-                    <span className="text-[10px] sm:text-xs text-white font-medium">{p.pageNum}</span>
+            {loadError ? (
+              <div className="flex flex-col items-center justify-center py-12 px-4 text-center w-full col-span-full">
+                <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 mb-4">
+                  <Lock className="w-8 h-8 text-red-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Password Protected</h3>
+                <p className="text-white/40 max-w-sm mb-6">
+                  This file is encrypted and cannot be converted. Please remove the password first.
+                </p>
+                <Link href="/tool/unlock-pdf" className="btn btn-secondary text-sm">
+                  Go to Unlock Tool
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4 w-full content-start">
+                {pages.map((p) => (
+                  <div key={p.pageNum} className="relative aspect-[1/1.414] bg-white rounded-lg shadow-sm border overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.dataUrl} alt={`Page ${p.pageNum}`} className="w-full h-full object-cover" />
+                    <div className="absolute bottom-1 left-1/2 -translate-x-1/2 bg-black/60 px-2 py-0.5 rounded-full backdrop-blur-sm">
+                      <span className="text-[10px] sm:text-xs text-white font-medium">{p.pageNum}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
-              {loading && (
-                <div className="aspect-[1/1.414] rounded-lg bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-2">
-                  <Loader2 className="w-5 h-5 text-purple-400 animate-spin" />
-                  <span className="text-[10px] text-white/40">Loading...</span>
-                </div>
-              )}
-            </div>
+                ))}
+                {loading && (
+                  <div className="aspect-[1/1.414] rounded-lg bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-2">
+                    <Loader2 className="w-5 h-5 text-purple-400 animate-spin" />
+                    <span className="text-[10px] text-white/40">Loading...</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </UniversalPreview>
       }
@@ -129,14 +167,22 @@ export default function PdfToImageControls({
         </div>
       }
       action={
-        <button
-          onClick={handleConvert}
-          disabled={processing || loading}
-          className="btn btn-primary w-full shadow-[0_0_20px_rgba(168,85,247,0.2)]"
-        >
-          {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
-          {processing ? "Converting..." : "Convert to Images"}
-        </button>
+        <div className="w-full">
+          <SecurityModal
+            isOpen={securityModalOpen}
+            onClose={() => setSecurityModalOpen(false)}
+            onConfirm={handleSecurityConfirm}
+            protectedFiles={[file!]}
+          />
+          <button
+            onClick={handleConvert}
+            disabled={processing || loading || !!loadError}
+            className="btn btn-primary w-full shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+          >
+            {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
+            {processing ? "Converting..." : "Convert to Images"}
+          </button>
+        </div>
       }
     />
   );

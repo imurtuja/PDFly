@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   closestCenter,
   DndContext,
@@ -22,6 +22,9 @@ import { mergePdfs } from "@/lib/pdf/merge";
 import DraggableFileCard from "../pdf/DraggableFileCard";
 import UniversalPreview from "../pdf/UniversalPreview";
 import ToolLayout from "./ToolLayout";
+import SecurityModal from "../pdf/SecurityModal";
+import { getProtectedFiles } from "@/lib/pdf/validation";
+import type { SortableFile } from "./types";
 
 export default function MergeControls({
   files,
@@ -33,6 +36,8 @@ export default function MergeControls({
   setResultFileName,
   setError,
 }: ToolControlsProps) {
+  const [securityModalOpen, setSecurityModalOpen] = useState(false);
+  const [protectedFiles, setProtectedFiles] = useState<File[]>([]);
 
   // Setup DND Kit sensors
   const sensors = useSensors(
@@ -40,9 +45,8 @@ export default function MergeControls({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  // Derive an array of unique ids for the files (using their names, assuming no dupes for simplicity)
-  // In a real prod environment we'd attach a unique ID to the file object on upload.
-  const items = useMemo(() => files.map((f) => f.name), [files]);
+  // Derive an array of unique ids for the files
+  const items = useMemo(() => files.map((f) => f.id), [files]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -58,7 +62,30 @@ export default function MergeControls({
 
   const handleRemove = (id: string) => {
     if (setFiles) {
-      setFiles(files.filter(f => f.name !== id));
+      setFiles(files.filter(f => f.id !== id));
+    }
+  };
+
+  const performMerge = async (filesToMerge: SortableFile[]) => {
+    try {
+      setProcessing(true);
+      setProgress(10);
+      setError(null);
+
+      const rawFiles = filesToMerge.map(f => f.file);
+      const result = await mergePdfs(rawFiles);
+      setProgress(90);
+
+      const blob = new Blob([result as unknown as BlobPart], { type: "application/pdf" });
+      setResultBlob(blob);
+
+      const baseName = rawFiles[0].name.replace(/\.pdf$/i, "");
+      setResultFileName(`${baseName} - Merge PDFs - PDFly by Murtuja.pdf`);
+      setProgress(100);
+    } catch (err) {
+      setError(`Failed to merge: ${err instanceof Error ? err.message : "Unknown error"}`);
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -67,25 +94,33 @@ export default function MergeControls({
       setError("Please upload at least 2 PDF files to merge.");
       return;
     }
-    try {
-      setProcessing(true);
-      setProgress(10);
-      setError(null);
 
-      const result = await mergePdfs(files);
-      setProgress(90);
-
-      const blob = new Blob([result as unknown as BlobPart], { type: "application/pdf" });
-      setResultBlob(blob);
-
-      const baseName = files[0].name.replace(/\.pdf$/i, "");
-      setResultFileName(`${baseName} - Merge PDFs - PDFigo by Murtuja.pdf`);
-      setProgress(100);
-    } catch (err) {
-      setError(`Failed to merge: ${err instanceof Error ? err.message : "Unknown error"}`);
-    } finally {
-      setProcessing(false);
+    const rawFiles = files.map(f => f.file);
+    // Step 1: Check for protected files
+    const encrypted = await getProtectedFiles(rawFiles);
+    if (encrypted.length > 0) {
+      setProtectedFiles(encrypted);
+      setSecurityModalOpen(true);
+      return;
     }
+
+    await performMerge(files);
+  };
+
+  const handleSecurityConfirm = async () => {
+    setSecurityModalOpen(false);
+    const encryptedNames = new Set(protectedFiles.map(f => f.name));
+    const cleanFiles = files.filter(f => !encryptedNames.has(f.file.name));
+    
+    // Update the UI list permanently as requested
+    setFiles(cleanFiles);
+
+    if (cleanFiles.length < 2) {
+      setError("After removing protected files, you need at least 2 files to merge.");
+      return;
+    }
+
+    await performMerge(cleanFiles);
   };
 
   return (
@@ -98,12 +133,12 @@ export default function MergeControls({
         >
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={items} strategy={rectSortingStrategy}>
-              <div className="flex flex-wrap gap-4 w-full content-start">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full content-start pb-8 place-items-center sm:place-items-start">
                 {files.map((file, index) => (
                   <DraggableFileCard
-                    key={file.name}
-                    id={file.name}
-                    file={file}
+                    key={file.id}
+                    id={file.id}
+                    file={file.file}
                     index={index}
                     onRemove={handleRemove}
                   />
@@ -126,18 +161,26 @@ export default function MergeControls({
         </div>
       }
       action={
-        <button
-          onClick={handleMerge}
-          disabled={files.length < 2 || processing}
-          className="btn btn-primary w-full"
-        >
-          {processing ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Combine className="w-4 h-4" />
-          )}
-          {processing ? "Merging..." : `Merge ${files.length} PDF${files.length !== 1 ? "s" : ""}`}
-        </button>
+        <div className="w-full">
+          <SecurityModal
+            isOpen={securityModalOpen}
+            onClose={() => setSecurityModalOpen(false)}
+            onConfirm={handleSecurityConfirm}
+            protectedFiles={protectedFiles}
+          />
+          <button
+            onClick={handleMerge}
+            disabled={files.length < 2 || processing}
+            className="btn btn-primary w-full"
+          >
+            {processing ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Combine className="w-4 h-4" />
+            )}
+            {processing ? "Merging..." : `Merge ${files.length} PDF${files.length !== 1 ? "s" : ""}`}
+          </button>
+        </div>
       }
     />
   );

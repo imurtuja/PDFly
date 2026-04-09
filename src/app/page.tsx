@@ -8,19 +8,19 @@ import type { Metadata } from "next";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "PDFigo by Murtuja - Free Online PDF Tools | Merge, Split, Compress & More",
+  title: "PDFly by Murtuja - Free Online PDF Tools | Merge, Split, Compress & More",
   description:
     "Every PDF tool you'll ever need - merge, split, compress, convert, rotate, watermark. 100% free, fast, and private. All processing runs locally in your browser. Built by Murtuja.",
   alternates: {
-    canonical: "https://pdfigo.murtuja.in",
+    canonical: "https://pdfly.murtuja.in",
   },
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "PDFigo by Murtuja",
-  url: "https://pdfigo.murtuja.in",
+  name: "PDFly by Murtuja",
+  url: "https://pdfly.murtuja.in",
   description:
     "Free online PDF tools - merge, split, compress, convert, rotate, watermark. All processing runs locally in your browser.",
   applicationCategory: "UtilityApplication",

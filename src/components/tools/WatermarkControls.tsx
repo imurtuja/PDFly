@@ -3,18 +3,28 @@
 import { useState } from "react";
 import { addWatermark, type WatermarkOptions } from "@/lib/pdf/watermark";
 import type { ToolControlsProps } from "./types";
-import { Droplets, Loader2 } from "lucide-react";
+import { Droplets, Loader2, Lock } from "lucide-react";
+import Link from "next/link";
 import { usePdfLoader } from "@/hooks/usePdfLoader";
 import UniversalPreview from "../pdf/UniversalPreview";
 import ToolLayout from "./ToolLayout";
+import SecurityModal from "../pdf/SecurityModal";
+import { getProtectedFiles } from "@/lib/pdf/validation";
 
 export default function WatermarkControls({
-  files, setProcessing, processing, setProgress, setResultBlob, setResultFileName, setError,
+  files,
+  setProcessing,
+  processing,
+  setProgress,
+  setResultBlob,
+  setResultFileName,
+  setError,
 }: ToolControlsProps) {
-  const file = files[0] || null;
-  const { pages, totalPages, loading, error: loadError } = usePdfLoader(file, true, 20); // Load 20 pages max for preview
+  const file = files[0]?.file || null;
+  const { pages, totalPages, loading, error: loadError, isProtected } = usePdfLoader(file, true, 20); // Load 20 pages max for preview
+  const [securityModalOpen, setSecurityModalOpen] = useState(false);
 
-  const [text, setText] = useState("CONFIDENTIAL");
+  const [text, setText] = useState("PDFly by Murtuja");
   const [fontSize, setFontSize] = useState(48);
   const [opacity, setOpacity] = useState(0.3);
   const [rotation, setRotation] = useState(-45);
@@ -23,6 +33,14 @@ export default function WatermarkControls({
 
   const handleWatermark = async () => {
     if (!file || !text.trim()) return;
+
+    // Proactive check
+    const encrypted = await getProtectedFiles([file]);
+    if (encrypted.length > 0) {
+      setSecurityModalOpen(true);
+      return;
+    }
+
     try {
       setProcessing(true); setProgress(20); setError(null);
       const result = await addWatermark(file, {
@@ -35,11 +53,16 @@ export default function WatermarkControls({
       });
       setProgress(90);
       setResultBlob(new Blob([result as unknown as BlobPart], { type: "application/pdf" }));
-      const baseName = files[0].name.replace(/\.[^/.]+$/, "");
-      setResultFileName(`${baseName} - Watermark PDF - PDFigo by Murtuja.pdf`); setProgress(100);
+      const baseName = file.name.replace(/\.[^/.]+$/, "");
+      setResultFileName(`${baseName} - Watermarked - PDFly by Murtuja.pdf`); setProgress(100);
     } catch (err) {
       setError(`Failed: ${err instanceof Error ? err.message : "Unknown error"}`);
     } finally { setProcessing(false); }
+  };
+
+  const handleSecurityConfirm = () => {
+    setSecurityModalOpen(false);
+    setFiles([]);
   };
 
   if (!file) return null;
@@ -112,40 +135,48 @@ export default function WatermarkControls({
           description={`${totalPages} pages total. Watermark is applied globally.`}
           mode="grid"
         >
-          {loadError && <p className="text-sm text-red-400 w-full col-span-full">{loadError}</p>}
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pb-4 w-full content-start items-start">
-            {pages.map((p) => (
-              <div
-                key={p.pageNum}
-                className="relative w-full rounded-xl border border-white/10 bg-white/5 shadow-md flex items-center justify-center overflow-hidden self-start"
-              >
-                {/* We create a wrapper block that exactly hugs the image so absolute positioning of the text matches the actual document edge */}
-                <div className="relative w-full h-full flex flex-col" style={{ containerType: 'inline-size' }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.dataUrl} alt={`Page ${p.pageNum}`} className="w-full h-auto block pointer-events-none" />
-
-                  {/* Live Watermark Overlay rendering tightly over the image bounds */}
-                  <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                    <div style={getPreviewStyle()}>
-                      {text}
+          {loadError ? (
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center w-full col-span-full">
+              <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 mb-4">
+                <Lock className="w-8 h-8 text-red-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Password Protected</h3>
+              <p className="text-white/40 max-w-sm mb-6">
+                This file is encrypted and cannot be watermarked. Please remove the password first.
+              </p>
+              <Link href="/tool/unlock-pdf" className="btn btn-secondary text-sm">
+                Go to Unlock Tool
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pb-4 w-full content-start items-start">
+              {pages.map((p) => (
+                <div
+                  key={p.pageNum}
+                  className="relative w-full rounded-xl border border-white/10 bg-white/5 shadow-md flex items-center justify-center overflow-hidden self-start"
+                >
+                  <div className="relative w-full h-full flex flex-col" style={{ containerType: 'inline-size' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.dataUrl} alt={`Page ${p.pageNum}`} className="w-full h-auto block pointer-events-none" />
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                      <div style={getPreviewStyle()}>
+                        {text}
+                      </div>
                     </div>
                   </div>
+                  <div className="absolute top-2 left-2 bg-black/60 shadow-md px-2 py-0.5 rounded text-[10px] text-white pointer-events-none z-10">
+                    {p.pageNum}
+                  </div>
                 </div>
-
-                {/* Page number badge */}
-                <div className="absolute top-2 left-2 bg-black/60 shadow-md px-2 py-0.5 rounded text-[10px] text-white pointer-events-none z-10">
-                  {p.pageNum}
+              ))}
+              {loading && (
+                <div className="aspect-[3/4] rounded-xl border border-white/5 bg-white/5 flex flex-col items-center justify-center gap-2">
+                  <Loader2 className="w-5 h-5 text-purple-400 animate-spin" />
+                  <span className="text-xs text-white/40">Rendering...</span>
                 </div>
-              </div>
-            ))}
-            {loading && (
-              <div className="aspect-[3/4] rounded-xl border border-white/5 bg-white/5 flex flex-col items-center justify-center gap-2">
-                <Loader2 className="w-5 h-5 text-purple-400 animate-spin" />
-                <span className="text-xs text-white/40">Rendering...</span>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </UniversalPreview>
       }
       options={
@@ -229,14 +260,22 @@ export default function WatermarkControls({
         </div>
       }
       action={
-        <button
-          onClick={handleWatermark}
-          disabled={!text.trim() || processing}
-          className="btn btn-primary w-full shadow-[0_0_20px_rgba(168,85,247,0.2)]"
-        >
-          {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Droplets className="w-5 h-5" />}
-          {processing ? "Applying..." : "Stamp PDF"}
-        </button>
+        <div className="w-full">
+          <SecurityModal
+            isOpen={securityModalOpen}
+            onClose={() => setSecurityModalOpen(false)}
+            onConfirm={handleSecurityConfirm}
+            protectedFiles={[file!]}
+          />
+          <button
+            onClick={handleWatermark}
+            disabled={!text.trim() || processing || !!loadError}
+            className="btn btn-primary w-full shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+          >
+            {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Droplets className="w-5 h-5" />}
+            {processing ? "Applying..." : "Stamp PDF"}
+          </button>
+        </div>
       }
     />
   );

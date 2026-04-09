@@ -1,45 +1,46 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Outfit, Sora } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileNav from "@/components/MobileNav";
+import LogSilencer from "@/components/LogSilencer";
 
-const inter = Inter({
-  variable: "--font-inter",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
   display: "swap",
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const sora = Sora({
+  variable: "--font-sora",
   subsets: ["latin"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pdfigo.murtuja.in"),
+  metadataBase: new URL("https://pdfly.murtuja.in"),
   title: {
-    default: "PDFigo by Murtuja - Free Online PDF Tools",
-    template: "%s | PDFigo by Murtuja",
+    default: "PDFly by Murtuja - Free Online PDF Tools",
+    template: "%s | PDFly by Murtuja",
   },
   description:
     "Merge, split, compress, convert, rotate, watermark - all running locally in your browser. Fast, free, and private. No uploads. No servers. Built by Murtuja.",
   keywords: [
     "PDF tools", "merge PDF", "split PDF", "compress PDF", "PDF to image",
     "image to PDF", "rotate PDF", "watermark PDF", "free PDF tools",
-    "online PDF editor", "PDFigo", "Murtuja", "private PDF tools",
+    "online PDF editor", "PDFly", "Murtuja", "private PDF tools",
     "browser PDF tools", "no upload PDF",
   ],
   authors: [{ name: "Murtuja", url: "https://murtuja.in" }],
   creator: "Murtuja",
-  publisher: "PDFigo by Murtuja",
+  publisher: "PDFly by Murtuja",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://pdfigo.murtuja.in",
-    siteName: "PDFigo by Murtuja",
-    title: "PDFigo by Murtuja - Free Online PDF Tools",
+    url: "https://pdfly.murtuja.in",
+    siteName: "PDFly by Murtuja",
+    title: "PDFly by Murtuja - Free Online PDF Tools",
     description:
       "Every PDF tool you'll ever need. Merge, split, compress, convert all running locally in your browser. Your files never leave your device.",
     images: [
@@ -47,13 +48,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "PDFigo by Murtuja - Free Online PDF Tools",
+        alt: "PDFly by Murtuja - Free Online PDF Tools",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "PDFigo by Murtuja - Free Online PDF Tools",
+    title: "PDFly by Murtuja - Free Online PDF Tools",
     description:
       "Every PDF tool you'll ever need. Fast, free, and 100% private.",
     images: ["/og-image.png"],
@@ -70,7 +71,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://pdfigo.murtuja.in",
+    canonical: "https://pdfly.murtuja.in",
   },
   icons: {
     icon: [
@@ -88,9 +89,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`} data-scroll-behavior="smooth">
-      <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased pb-24 md:pb-0">
+    <html lang="en" className={`${outfit.variable} ${sora.variable}`} data-scroll-behavior="smooth">
+      <body
+        className={`${outfit.className} min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased selection:bg-purple-500/30 selection:text-white`}
+        suppressHydrationWarning
+      >
         <Navbar />
+        <LogSilencer />
         <main className="flex-1 w-full overflow-x-hidden">{children}</main>
         <Footer />
         <MobileNav />

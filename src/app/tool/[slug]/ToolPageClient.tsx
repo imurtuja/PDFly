@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { getToolBySlug } from "@/lib/tools";
 import UploadBox from "@/components/UploadBox";
 import DownloadSection from "@/components/DownloadSection";
+import type { SortableFile } from "@/components/tools/types";
+import { fileTransfer } from "@/lib/file-transfer";
 
 /* ——— Tool-specific controls ——— */
 import MergeControls from "@/components/tools/MergeControls";
@@ -25,7 +27,7 @@ import ImageToPdfControls from "@/components/tools/ImageToPdfControls";
 export default function ToolPageClient({ slug }: { slug: string }) {
   const tool = getToolBySlug(slug);
 
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<SortableFile[]>([]);
   const [processing, setProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [resultBlob, setResultBlob] = useState<Blob | null>(null);
@@ -40,6 +42,30 @@ export default function ToolPageClient({ slug }: { slug: string }) {
     setProgress(0);
     setProcessing(false);
   }, []);
+
+  const handleFiles = useCallback((incomingFiles: File[]) => {
+    const newSortableFiles: SortableFile[] = incomingFiles.map(file => ({
+      id: `${file.name}-${file.lastModified}-${Math.random().toString(36).substring(2, 9)}`,
+      file
+    }));
+
+    if (tool?.acceptMultiple) {
+      setFiles(prev => [...prev, ...newSortableFiles]);
+    } else {
+      setFiles(newSortableFiles.slice(0, 1));
+    }
+  }, [tool]);
+
+  // AUTO-HANDOVER: Check if a file was passed from another tool
+  useEffect(() => {
+    if (tool && fileTransfer.hasPendingFiles()) {
+      const pending = fileTransfer.peekPendingFiles();
+      if (pending) {
+        handleFiles(pending);
+        fileTransfer.popPendingFiles(); // Clear now that they are handled
+      }
+    }
+  }, [handleFiles, tool]);
 
   if (!tool) {
     return (
@@ -110,7 +136,7 @@ export default function ToolPageClient({ slug }: { slug: string }) {
   return (
     <div className="min-h-screen pt-24 pb-20">
       {/* ——— CENTERED CONTAINER ——— */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back link */}
         <Link
           href="/tools"
@@ -168,8 +194,8 @@ export default function ToolPageClient({ slug }: { slug: string }) {
               <UploadBox
                 accept={tool.acceptTypes}
                 multiple={tool.acceptMultiple}
-                files={files}
-                onFiles={setFiles}
+                files={files.map(f => f.file)}
+                onFiles={handleFiles}
               />
 
               {/* Step 2: Tool Workspace (Controls & Previews) */}

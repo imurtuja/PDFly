@@ -17,21 +17,10 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     try {
-      // Use @cantoo/pdf-lib for pure JS PDF encryption 
-      const pdfDoc = await PDFDocument.load(buffer);
-      
-      pdfDoc.encrypt({
-        userPassword: password,
-        ownerPassword: password,
-        permissions: {
-          printing: 'highResolution',
-          modifying: false,
-          copying: false,
-          annotating: false,
-          fillingForms: false,
-          contentAccessibility: false,
-          documentAssembly: false,
-        },
+      // Use @cantoo/pdf-lib to load and decrypt the document
+      const pdfDoc = await PDFDocument.load(buffer, {
+        password,
+        ignoreEncryption: false,
       });
       
       const pdfBytes = await pdfDoc.save();
@@ -39,22 +28,30 @@ export async function POST(req: NextRequest) {
       return new NextResponse(Buffer.from(pdfBytes), {
         headers: {
           "Content-Type": "application/pdf",
-          "Content-Disposition": `attachment; filename="protected-${file.name}"`,
+          "Content-Disposition": `attachment; filename="unlocked-${file.name}"`,
         },
       });
-    } catch (encryptError: any) {
-      console.error("Encryption implementation failed:", encryptError);
+    } catch (decryptError: any) {
+      console.error("Decryption failed:", decryptError.message);
+      
+      // Check if it's a password error or a parsing error
+      const isPasswordError = decryptError.message.toLowerCase().includes("password") || 
+                              decryptError.message.toLowerCase().includes("encrypt");
+      
       return NextResponse.json(
-        { error: "PDF encryption failed during processing: " + encryptError.message },
-        { status: 500 }
+        { 
+          error: isPasswordError 
+            ? "Incorrect password. Please check and try again." 
+            : "PDF decryption failed during processing: " + decryptError.message 
+        },
+        { status: 403 }
       );
     }
   } catch (err: any) {
-    console.error("Protect PDF API Error:", err);
+    console.error("Unlock PDF API Error:", err);
     return NextResponse.json(
       { error: err.message || "Failed to process PDF" },
       { status: 500 }
     );
   }
 }
-

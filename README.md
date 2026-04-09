@@ -1,281 +1,245 @@
-<div align="center">
+# <img src="https://api.iconify.design/mdi:file-pdf-box.svg?color=%236366f1" width="48" align="center" /> PDFly
 
-<br />
+### *Every PDF tool you'll ever need - free, fast, and 100% private.*
 
-<img src="public/icon.svg" alt="PDFigo Logo" width="72" height="72" />
+A premium, open-source PDF toolkit built entirely in the browser. Merge, split, compress, convert, and manage your documents safely locally without ever sending them to a server.
 
-<h1>PDFigo</h1>
+<br/>
 
-<p><strong>Every PDF tool you'll ever need — free, fast, and 100% private.</strong></p>
+[![Live Demo](https://img.shields.io/badge/Live_Demo-pdfly.murtuja.in-10b981?style=for-the-badge&logo=google-earth&logoColor=white)](https://pdfly.murtuja.in)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+
+<br/>
 
 <p>
-  <a href="https://pdfigo.murtuja.in" target="_blank"><img src="https://img.shields.io/badge/Live%20Site-pdfigo.murtuja.in-6366f1?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Site" /></a>
-  &nbsp;
-  <img src="https://img.shields.io/badge/Next.js-16.2-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
-  &nbsp;
-  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  &nbsp;
-  <img src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
-  &nbsp;
-  <img src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge" alt="MIT License" />
+  <a href="https://pdfly.murtuja.in"><b>Live Site</b></a> &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="#--features"><b>Features</b></a> &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="#--tech-stack"><b>Tech Stack</b></a> &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="#--getting-started"><b>Setup Guide</b></a> &nbsp;&nbsp;•&nbsp;&nbsp;
+  <a href="#--architecture"><b>Architecture</b></a>
 </p>
-
-<br />
-
-> Built entirely in the browser. No uploads. No servers. No accounts. Your files never leave your device.
-
-<br />
 
 </div>
 
 ---
 
-## What is PDFigo?
+## <img src="https://api.iconify.design/mdi:account-badge.svg?color=%236366f1" width="28" align="center" /> About the Developer
 
-PDFigo is a free, open-source PDF toolkit that runs **entirely in your browser**. There are no server uploads, no file storage, and no third-party APIs involved. Everything — from merging files to adding watermarks — happens locally using the power of modern web APIs.
-
-I built this because I was tired of uploading sensitive documents to random online tools just to rotate a page or split a PDF. PDFigo fixes that. It's fast, it's private, and it gets out of your way.
-
----
-
-## Features
-
-### 12 Fully Functional PDF Tools
-
-| Category | Tool | What it does |
-|---|---|---|
-| 📁 **Organize** | Merge PDF | Combine multiple PDFs into one with drag-and-drop reordering |
-| 📁 **Organize** | Split PDF | Split by custom page ranges, extract individual pages |
-| 📁 **Organize** | Rotate PDF | Rotate pages 90°, 180°, or 270° — apply to all or individual pages |
-| 📁 **Organize** | Delete Pages | Remove unwanted pages with a visual page picker |
-| 📁 **Organize** | Reorder Pages | Drag and drop to rearrange pages in any order |
-| 🔄 **Convert** | PDF to Image | Export pages as high-quality JPG or PNG, with ZIP download |
-| 🔄 **Convert** | Image to PDF | Combine multiple images (JPG, PNG, WebP, etc.) into a PDF |
-| ⚡ **Optimize** | Compress PDF | Reduce file size while keeping it readable |
-| ⚡ **Optimize** | Add Watermark | Stamp custom text, control opacity, position, and rotation |
-| ⚡ **Optimize** | Page Numbers | Add formatted page numbers with custom position and style |
-| 🔒 **Security** | Protect PDF | Password-protect your PDF with owner permissions |
-| 🔒 **Security** | Unlock PDF | Remove password from a PDF you own |
-
-### Platform Highlights
-
-- **🔐 Zero data exposure** — All processing runs on the client side via `pdf-lib` and `pdfjs-dist`. Nothing is ever sent to a server.
-- **⚡ Instant results** — No waiting for upload/download cycles. Outputs are generated in milliseconds.
-- **🎨 Premium dark UI** — Glassmorphism design system with animated orbs, smooth transitions, and mobile-first layouts.
-- **📱 Fully responsive** — Works seamlessly on desktop, tablet, and mobile with a dedicated mobile nav.
-- **🔍 SEO-optimized** — Dynamic Open Graph images, structured metadata, sitemap, and robots.txt out of the box.
-- **🧩 Drag-and-drop** — File reordering powered by `@dnd-kit/core` for a smooth, accessible experience.
+<table>
+  <tr>
+    <td width="140" align="center">
+      <img src="https://github.com/imurtuja.png" width="100" height="100" style="border-radius: 50%;" alt="Murtuja" />
+      <br/>
+      <strong>Murtuja</strong>
+      <br/>
+      <sub>Full-Stack Developer</sub>
+    </td>
+    <td>
+      <p>
+        Hi! I'm <strong>Murtuja</strong>, a passionate developer who loves building premium, production-grade web applications. PDFly is a platform built to provide a beautiful, seamless, and-most importantly-private way to manage PDF documents.
+      </p>
+      <p>
+        I built this because I was tired of uploading sensitive documents to random online tools just to rotate a page or split a PDF. PDFly fixes that. It's fast, it's private, and everything happens directly via modern web APIs on your machine. My goal is to prove that utility tools can feature polished, elegant UIs while remaining highly functional and secure.
+      </p>
+      <br/>
+      <p>
+        <a href="https://www.murtuja.in"><img src="https://img.shields.io/badge/Portfolio-murtuja.in-2563EB?style=flat&logo=globe&logoColor=white" alt="Portfolio" /></a>
+        <a href="https://github.com/imurtuja"><img src="https://img.shields.io/badge/GitHub-imurtuja-181717?style=flat&logo=github&logoColor=white" alt="GitHub" /></a>
+        <a href="https://www.linkedin.com/in/imurtuja"><img src="https://img.shields.io/badge/LinkedIn-imurtuja-0A66C2?style=flat&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+      </p>
+    </td>
+  </tr>
+</table>
 
 ---
 
-## Tech Stack
+## <img src="https://api.iconify.design/mdi:star-four-points.svg?color=%23eab308" width="28" align="center" /> Features
 
-| Layer | Technology |
-|---|---|
-| **Framework** | [Next.js 16](https://nextjs.org/) (App Router) |
-| **Language** | TypeScript 5 |
-| **Styling** | Tailwind CSS v4 |
-| **Animations** | Framer Motion |
-| **PDF Processing** | [pdf-lib](https://pdf-lib.js.org/) |
-| **PDF Rendering** | [pdfjs-dist](https://github.com/mozilla/pdf.js) |
-| **Image Processing** | [sharp](https://sharp.pixelplumbing.com/) |
-| **Drag and Drop** | [@dnd-kit/core](https://dndkit.com/) |
-| **File Archiving** | [jszip](https://stuk.github.io/jszip/) |
-| **Icons** | [Lucide React](https://lucide.dev/) |
-| **Fonts** | Inter + Playfair Display (Google Fonts) |
+PDFly brings together 12 powerful PDF tools into one seamless, browser-based ecosystem.
+
+### <img src="https://api.iconify.design/mdi:folder-multiple.svg?color=%238b5cf6" width="24" align="center" /> Organize Documents
+
+| Feature | Description |
+|:---|:---|
+| **Merge PDFs** | Combine multiple PDFs into one with an intuitive drag-and-drop reordering interface. |
+| **Split PDFs** | Split by custom page ranges or extract individual pages effortlessly. |
+| **Rotate Pages** | Rotate pages by 90°, 180°, or 270° - apply globally or selectively. |
+| **Manage Pages** | Visually delete unwanted pages or rearrange them on an interactive canvas. |
+
+### <img src="https://api.iconify.design/mdi:sync.svg?color=%23f59e0b" width="24" align="center" /> Format Conversion
+
+| Feature | Description |
+|:---|:---|
+| **PDF to Image** | Export pages as high-quality JPG or PNG files, bundled into an instant ZIP download. |
+| **Image to PDF** | Stitch together multiple images (JPG, PNG, WebP) into a clean, unified document. |
+
+### <img src="https://api.iconify.design/mdi:lightning-bolt.svg?color=%2310b981" width="24" align="center" /> Optimize & Annotate
+
+| Feature | Description |
+|:---|:---|
+| **Compress Files** | Intelligently reduce PDF file sizes while maintaining sharp readability. |
+| **Watermarking** | Stamp custom text across all pages with precise control over rotation, position, and opacity. |
+| **Page Numbers** | Automatically inject formatted page numbers with customizable styling. |
+
+### <img src="https://api.iconify.design/mdi:shield-lock.svg?color=%23ef4444" width="24" align="center" /> Security & Privacy
+
+| Feature | Description |
+|:---|:---|
+| **Zero Data Exposure** | Absolute privacy. All processing runs completely un tethered on the client side; nothing ever reaches a server. |
+| **Protect** | Add robust password protection to your confidential PDFs to restrict unauthorized access. |
+| **Unlock** | Instantly remove password encryption from PDFs you rightfully own. |
+
+### <img src="https://api.iconify.design/mdi:palette.svg?color=%230ea5e9" width="24" align="center" /> Premium User Experience
+
+| Feature | Description |
+|:---|:---|
+| **Sleek Aesthetic** | A pristine dark-mode UI with smooth glassmorphism, animated elements, and responsive states. |
+| **Drag & Drop** | Effortless interactions powered by `@dnd-kit` for completely frictionless file handling. |
+
+<br/>
 
 ---
 
-## Getting Started
+## <img src="https://api.iconify.design/mdi:code-braces.svg?color=%236366f1" width="28" align="center" /> Tech Stack
+
+<table>
+  <tr>
+    <td align="center" width="110">
+      <img src="https://skillicons.dev/icons?i=nextjs,react" width="48" height="48" alt="Next.js & React" />
+      <br/><sub><b>Next.js & React</b></sub>
+    </td>
+    <td align="center" width="110">
+      <img src="https://skillicons.dev/icons?i=ts" width="48" height="48" alt="TypeScript" />
+      <br/><sub><b>TypeScript 5</b></sub>
+    </td>
+    <td align="center" width="110">
+      <img src="https://skillicons.dev/icons?i=tailwind" width="48" height="48" alt="Tailwind CSS" />
+      <br/><sub><b>Tailwind v4</b></sub>
+    </td>
+    <td align="center" width="110">
+      <img src="https://api.iconify.design/mdi:file-pdf-box.svg?color=%23f43f5e" width="48" height="48" alt="PDF-Lib" />
+      <br/><sub><b>pdf-lib</b></sub>
+    </td>
+  </tr>
+</table>
+
+### Full Dependency Breakdown
+
+| Icon | Category | Technology | Purpose |
+|:---:|:---|:---|:---|
+| <img src="https://skillicons.dev/icons?i=nextjs" width="20" /> | **Framework** | Next.js 16 | App Router pages, server rendering logic, and lightning-fast delivery. |
+| <img src="https://skillicons.dev/icons?i=ts" width="20" /> | **Language** | TypeScript | Robust end-to-end type safety for rock-solid stability. |
+| <img src="https://skillicons.dev/icons?i=tailwind" width="20" /> | **Styling** | Tailwind CSS v4 | Rapid UI construction with a consistent, utility-first design system. |
+| <img src="https://api.iconify.design/mdi:animation-play.svg" width="20" /> | **Animations** | Framer Motion | Fluid micro-interactions and page transitions defining the premium feel. |
+| <img src="https://api.iconify.design/mdi:language-javascript.svg" width="20" /> | **PDF Processing**| pdf-lib & pdfjs | In-memory document viewing and manipulation directly in the browser. |
+| <img src="https://api.iconify.design/mdi:image-edit.svg" width="20" /> | **File Utils** | sharp & JSZip | Client-side image optimizations and archiving tools. |
+
+---
+
+## <img src="https://api.iconify.design/mdi:family-tree.svg?color=%23ec4899" width="28" align="center" /> Architecture
+
+```text
+pdfly/
+├── src/                        
+│   ├── app/                    # Next.js App Router (Layouts, Pages, SEO config)
+│   │   ├── tools/              # Tools landing directory
+│   │   └── tool/...            # Dynamic routing for 12 independent tools 
+│   │
+│   ├── components/             # Reusable UI Architecture
+│   │   ├── Navbar.tsx
+│   │   ├── pdf/...             # PDF Preview and generic visualization primitives
+│   │   └── tools/...           # Encapsulated state panels for each action (e.g. MergeControls.tsx)
+│   │
+│   └── lib/                    # Core business logic processing
+│       ├── tools.ts            # Centralized dictionary map of endpoints to icons/descriptions
+│       └── pdf/...             # The mathematical heavy lifting: atomic scripts hitting 'pdf-lib'
+│
+├── public/                     # Static media payloads and OS icons
+├── tailwind.config.js          # Tailwind specification extensions
+└── package.json                # Dependencies map
+```
+
+---
+
+## <img src="https://api.iconify.design/mdi:rocket-launch.svg?color=%23ef4444" width="28" align="center" /> Getting Started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) v18 or later
-- npm, yarn, or pnpm
+- **Node.js** v18 or later
+- **npm**, **yarn**, or **pnpm**
 
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/imurtuja/pdfigo-v2.git
-   cd pdfigo-v2
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-
-   ```bash
-   npm run dev
-   ```
-
-4. **Open in browser**
-
-   Visit [http://localhost:3000](http://localhost:3000)
-
-That's it. No environment variables, no API keys, no database setup. It just works.
-
----
-
-## Project Structure
-
-```
-pdfigo/
-├── src/
-│   ├── app/                        # Next.js App Router pages
-│   │   ├── layout.tsx              # Root layout with global metadata & SEO
-│   │   ├── page.tsx                # Homepage
-│   │   ├── tools/                  # Tools listing page
-│   │   │   └── page.tsx
-│   │   ├── tool/
-│   │   │   └── [slug]/             # Dynamic route for each tool
-│   │   ├── apple-icon.tsx          # Generated Apple touch icon
-│   │   ├── icon.tsx                # Generated favicon
-│   │   ├── opengraph-image.tsx     # Dynamic OG image generation
-│   │   ├── robots.ts               # SEO robots config
-│   │   └── sitemap.ts              # Auto-generated sitemap
-│   │
-│   ├── components/                 # UI components
-│   │   ├── Navbar.tsx
-│   │   ├── Footer.tsx
-│   │   ├── MobileNav.tsx
-│   │   ├── HeroSection.tsx
-│   │   ├── ToolsGrid.tsx
-│   │   ├── ToolCard.tsx
-│   │   ├── UploadBox.tsx           # Drag-and-drop file uploader
-│   │   ├── PdfPreview.tsx          # PDF page thumbnail renderer
-│   │   ├── HowItWorksSection.tsx
-│   │   ├── TrustSection.tsx
-│   │   ├── ValueStrip.tsx
-│   │   ├── CtaSection.tsx
-│   │   ├── DownloadSection.tsx
-│   │   ├── pdf/                    # PDF-specific UI primitives
-│   │   └── tools/                  # Per-tool control panels
-│   │       ├── MergeControls.tsx
-│   │       ├── SplitControls.tsx
-│   │       ├── CompressControls.tsx
-│   │       ├── PdfToImageControls.tsx
-│   │       ├── ImageToPdfControls.tsx
-│   │       ├── RotateControls.tsx
-│   │       ├── DeletePagesControls.tsx
-│   │       ├── ReorderControls.tsx
-│   │       ├── WatermarkControls.tsx
-│   │       ├── PageNumbersControls.tsx
-│   │       ├── ProtectControls.tsx
-│   │       └── UnlockControls.tsx
-│   │
-│   ├── lib/
-│   │   ├── tools.ts                # Central tool registry (slugs, icons, metadata)
-│   │   └── pdf/                    # Core PDF processing logic
-│   │       ├── merge.ts
-│   │       ├── split.ts
-│   │       ├── rotate.ts
-│   │       ├── reorder.ts
-│   │       ├── delete-pages.ts
-│   │       ├── watermark.ts
-│   │       ├── page-numbers.ts
-│   │       ├── protect.ts
-│   │       └── unlock.ts
-│   │
-│   └── hooks/                      # Custom React hooks
-│
-└── public/                         # Static assets
-```
-
----
-
-## How It Works
-
-PDFigo uses a clean separation between the UI layer and the processing layer:
-
-1. **Upload** — The user drops or selects files via the `UploadBox` component. Files are stored as browser `File` objects in React state — they never touch a server.
-
-2. **Preview** — `pdfjs-dist` renders PDF pages as canvas thumbnails directly in the browser, giving users visual feedback before processing.
-
-3. **Process** — Each tool has a dedicated module in `src/lib/pdf/` that uses `pdf-lib` to manipulate the PDF in memory. Options like page ranges, watermark text, passwords, etc. are collected via the tool's control panel component.
-
-4. **Download** — The output is converted to a `Blob` and offered for download using a temporary object URL. JSZip is used when multiple files need to be packaged together (e.g., PDF to Image export).
-
----
-
-## Available Scripts
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start the development server |
-| `npm run build` | Create an optimized production build |
-| `npm run start` | Serve the production build locally |
-| `npm run lint` | Run ESLint across the project |
-
----
-
-## Deployment
-
-PDFigo is designed to be deployed on [Vercel](https://vercel.com) with zero configuration:
+### 1. Clone the Repository
 
 ```bash
-# Install Vercel CLI
-npm install -g vercel
-
-# Deploy
-vercel
+git clone https://github.com/imurtuja/pdfly.git
+cd pdfly
 ```
 
-Since there's no backend, it can also be deployed to any static or edge hosting provider that supports Next.js, including Netlify, Cloudflare Pages, and AWS Amplify.
-
----
-
-## Roadmap
-
-Here's what I have planned for future releases:
-
-- [ ] **OCR support** — Extract text from scanned PDFs using Tesseract.js
-- [ ] **PDF to Word** — Export editable `.docx` files from PDF content
-- [ ] **Batch processing** — Process multiple files at once for compress, rotate, and watermark
-- [ ] **Annotate PDF** — Add highlights, notes, and shapes to documents
-- [ ] **PWA support** — Offline-capable, installable as a native-like app
-- [ ] **Dark / Light theme toggle** — User-selectable color scheme
-
----
-
-## Contributing
-
-Contributions are welcome! If you find a bug, have a feature request, or want to improve the code, feel free to open an issue or submit a pull request.
+### 2. Install Dependencies
 
 ```bash
-# Fork the repo, then:
-git checkout -b feature/your-feature-name
-git commit -m "feat: add your feature"
-git push origin feature/your-feature-name
-# Open a pull request
+npm install
 ```
 
-Please keep PRs focused and include a clear description of what changed and why.
+### 3. Run Development Environment
+
+Since all logic is client-driven, there are zero `.env` variables or API configurations to establish. 
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to start processing your PDFs instantly!
 
 ---
 
-## License
+## <img src="https://api.iconify.design/mdi:cloud-upload.svg?color=%233b82f6" width="28" align="center" /> Deployment
 
-This project is open source under the [MIT License](LICENSE). Feel free to use it, fork it, and build on top of it.
+PDFly uses Next.js server logic gracefully out-of-the-box and can deploy to Vercel instantly. 
+The stable version is currently live and performing locally at **[pdfly.murtuja.in](https://pdfly.murtuja.in)**
 
 ---
 
-## Author
+## <img src="https://api.iconify.design/mdi:hand-heart.svg?color=%2310b981" width="28" align="center" /> Contributing
 
-Built by **Murtuja** — a developer who believes your files deserve privacy.
+Contributions are highly encouraged!
 
-- 🌐 [murtuja.in](https://murtuja.in)
-- 🛠️ [PDFigo Live](https://pdfigo.murtuja.in)
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/cool-new-tool`
+3. **Commit** your changes: `git commit -m "feat: added OCR text extraction"`
+4. **Push** to the branch: `git push origin feature/cool-new-tool`
+5. **Open** a Pull Request
+
+---
+
+## <img src="https://api.iconify.design/mdi:email-fast.svg?color=%238b5cf6" width="28" align="center" /> Contact
+
+**Murtuja** - Full-Stack Developer
+
+<p>
+  <a href="https://www.murtuja.in"><img src="https://img.shields.io/badge/Portfolio-murtuja.in-2563EB?style=for-the-badge&logo=globe&logoColor=white" alt="Portfolio" /></a>
+  <a href="mailto:murtuja.dev@gmail.com"><img src="https://img.shields.io/badge/Email-murtuja.dev@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" /></a>
+  <a href="https://www.linkedin.com/in/imurtuja"><img src="https://img.shields.io/badge/LinkedIn-imurtuja-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+  <a href="https://github.com/imurtuja"><img src="https://img.shields.io/badge/GitHub-imurtuja-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" /></a>
+</p>
+
+---
+
+## <img src="https://api.iconify.design/mdi:file-document.svg?color=%2364748b" width="28" align="center" /> License
+
+Distributed under the **MIT License**.
 
 ---
 
 <div align="center">
 
-If PDFigo saved you from uploading your files to a sketchy website, consider giving it a ⭐ on GitHub. It means a lot.
+**<img src="https://api.iconify.design/mdi:star.svg?color=%23eab308" width="16" /> If PDFly helped you avoid uploading a private document to a sketchy site, consider starring the repo!**
+
+<br/>
+
+Made with 🤍 by [Murtuja](https://www.murtuja.in)
 
 </div>

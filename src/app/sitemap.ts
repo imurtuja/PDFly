@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { tools } from "@/lib/tools";
 
-const BASE_URL = "https://pdfigo.murtuja.in";
+const BASE_URL = "https://pdfly.murtuja.in";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages = tools.map((tool) => ({

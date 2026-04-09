@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/"],
       },
     ],
-    sitemap: "https://pdfigo.murtuja.in/sitemap.xml",
+    sitemap: "https://pdfly.murtuja.in/sitemap.xml",
   };
 }

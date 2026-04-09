@@ -18,7 +18,7 @@ export default function UniversalPreview({
   rightAction,
 }: UniversalPreviewProps) {
   return (
-    <div className="w-full max-w-5xl mx-auto rounded-2xl border border-white/10 bg-white/5 p-4 flex flex-col min-h-[450px] lg:min-h-[550px] max-h-[80vh] overflow-hidden">
+    <div className="w-full max-w-none mx-auto rounded-2xl border border-white/10 bg-white/5 p-4 flex flex-col min-h-[450px] lg:min-h-[550px] max-h-[85vh] overflow-hidden">
       {/* Header section consistent across all tools */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 shrink-0">
         <div>

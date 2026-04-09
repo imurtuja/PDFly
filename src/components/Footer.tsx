@@ -8,12 +8,15 @@ export default function Footer() {
     <footer className="border-t border-white/[0.06] bg-[#070612]">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-600 to-purple-400 flex items-center justify-center">
-              <FileText className="w-3.5 h-3.5 text-white" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative w-8 h-8 flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-tr from-fuchsia-600 to-indigo-600 rounded-lg blur-[1px] opacity-30 group-hover:opacity-50 transition-opacity" />
+              <div className="relative w-full h-full rounded-lg bg-[#0d0c1d] border border-white/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                <FileText className="w-4 h-4 text-white relative z-10" />
+              </div>
             </div>
-            <span className="text-sm font-semibold text-white">
-              PDF<span className="text-purple-400">i</span>go
+            <span className="text-lg font-black text-white tracking-tighter font-display">
+              PDF<span className="text-purple-500">ly</span>
             </span>
           </Link>
 
@@ -30,7 +33,7 @@ export default function Footer() {
           </div>
 
           <p className="text-[11px] text-white/20">
-            © {new Date().getFullYear()} PDFigo by Murtuja. All tools run locally.
+            © {new Date().getFullYear()} PDFly by Murtuja. All tools run locally.
           </p>
         </div>
       </div>

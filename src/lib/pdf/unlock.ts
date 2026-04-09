@@ -1,4 +1,4 @@
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument } from "@cantoo/pdf-lib";
 
 export async function unlockPdf(
   file: File,
@@ -6,13 +6,12 @@ export async function unlockPdf(
 ): Promise<Uint8Array> {
   const bytes = await file.arrayBuffer();
 
-  // Load with password - pdf-lib will attempt to decrypt
+  // Load with password using @cantoo/pdf-lib which supports decryption
   const pdf = await PDFDocument.load(bytes, {
-    // @ts-expect-error - password is an internal undocumented option for basic decryption
     password,
     ignoreEncryption: false,
   });
 
-  // Re-save without encryption
+  // Re-save without encryption (it's decrypted now)
   return pdf.save();
 }

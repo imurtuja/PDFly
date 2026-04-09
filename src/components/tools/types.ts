@@ -1,6 +1,11 @@
+export interface SortableFile {
+  id: string;
+  file: File;
+}
+
 export interface ToolControlsProps {
-  files: File[];
-  setFiles: (files: File[]) => void;
+  files: SortableFile[];
+  setFiles: (files: SortableFile[]) => void;
   processing: boolean;
   setProcessing: (v: boolean) => void;
   progress: number;

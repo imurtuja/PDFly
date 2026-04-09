@@ -10,6 +10,7 @@ export interface PdfLoaderResult {
   totalPages: number;
   loading: boolean;
   error: string | null;
+  isProtected: boolean;
 }
 
 export function usePdfLoader(file: File | null, loadAll: boolean = false, initialLimit: number = 5): PdfLoaderResult {
@@ -17,6 +18,7 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isProtected, setIsProtected] = useState(false);
 
   const currentFileRef = useRef<File | null>(null);
 
@@ -26,6 +28,7 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
       setTotalPages(0);
       setLoading(false);
       setError(null);
+      setIsProtected(false);
       return;
     }
 
@@ -35,6 +38,7 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
     async function loadPdf() {
       setLoading(true);
       setError(null);
+      setIsProtected(false);
       setPages([]);
 
       try {
@@ -45,7 +49,10 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
         const arrayBuffer = await file!.arrayBuffer();
         if (currentFileRef.current !== file || !isMounted) return;
 
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const pdf = await pdfjsLib.getDocument({ 
+          data: arrayBuffer,
+          verbosity: 0 // Silences background parsing warnings safely
+        }).promise;
         if (currentFileRef.current !== file || !isMounted) return;
         
         setTotalPages(pdf.numPages);
@@ -81,9 +88,20 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
             }
           }
         }
-      } catch (err) {
-        console.error("PDF Preview Error:", err);
-        if (isMounted) setError("Failed to generate PDF preview.");
+      } catch (err: any) {
+        const isPasswordError = err.name === "PasswordException" || err.code === 1;
+        if (!isPasswordError) {
+          console.error("PDF Preview Error:", err);
+        }
+        
+        if (isMounted) {
+          if (isPasswordError) {
+            setIsProtected(true);
+            setError("PASSWORD_PROTECTED");
+          } else {
+            setError("Failed to generate PDF preview.");
+          }
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -93,5 +111,5 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
     return () => { isMounted = false; };
   }, [file, loadAll, initialLimit]);
 
-  return { pages, totalPages, loading, error };
+  return { pages, totalPages, loading, error, isProtected };
 }

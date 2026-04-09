@@ -3,8 +3,8 @@
 @theme {
   --color-bg: #070612;
   --color-surface: #0d0c1d;
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
+  --font-display: var(--font-sora), system-ui, sans-serif;
 }
 
 /* ——— Base ——— */

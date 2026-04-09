@@ -23,6 +23,7 @@ export interface ToolDef {
   category: "organize" | "convert" | "optimize" | "security";
   acceptMultiple: boolean;
   acceptTypes: string;
+  comingSoon?: boolean;
 }
 
 export const tools: ToolDef[] = [
@@ -55,6 +56,7 @@ export const tools: ToolDef[] = [
     category: "optimize",
     acceptMultiple: false,
     acceptTypes: ".pdf",
+    comingSoon: true,
   },
   {
     slug: "pdf-to-image",

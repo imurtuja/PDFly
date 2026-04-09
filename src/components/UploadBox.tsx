@@ -50,11 +50,8 @@ export default function UploadBox({
         }
       }
 
-      if (multiple) {
-        onFiles([...files, ...arr]);
-      } else {
-        onFiles(arr.slice(0, 1));
-      }
+      const newFiles = multiple ? arr : arr.slice(0, 1);
+      onFiles(newFiles);
     },
     [accept, files, maxSizeMB, multiple, onFiles]
   );

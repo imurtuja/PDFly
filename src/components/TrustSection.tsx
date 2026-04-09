@@ -28,14 +28,14 @@ export default function TrustSection() {
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-medium mb-6">
                <ShieldCheck className="w-3.5 h-3.5" /> Client-Side Processing
             </div>
-            <h2 className="text-3xl md:text-4xl font-semibold text-white tracking-tight leading-tight mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight mb-6 font-display">
               Your files never leave <br className="hidden sm:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-300">
                 your device.
               </span>
             </h2>
             <p className="text-white/50 text-base md:text-lg leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
-              Unlike traditional PDF tools that require you to upload sensitive documents to their servers, PDFigo runs entirely in your browser. This guarantees absolute privacy and makes operations significantly faster.
+              Unlike traditional PDF tools that require you to upload sensitive documents to their servers, PDFly runs entirely in your browser. This guarantees absolute privacy and makes operations significantly faster.
             </p>
             
             <div className="space-y-4 max-w-lg mx-auto lg:mx-0">

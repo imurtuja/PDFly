@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { ToolControlsProps } from "./types";
+import type { ToolControlsProps, SortableFile } from "./types";
 import { FileImage, Loader2 } from "lucide-react";
 import {
   DndContext,
@@ -61,47 +61,39 @@ function SortableImageCard({ id, file, index, fit }: { id: string; file: File; i
 }
 
 export default function ImageToPdfControls({
-  files, setProcessing, processing, setProgress, setResultBlob, setResultFileName, setError,
+  files, setFiles, setProcessing, processing, setProgress, setResultBlob, setResultFileName, setError,
 }: ToolControlsProps) {
   const [orientation, setOrientation] = useState<"auto" | "portrait" | "landscape">("auto");
   const [fit, setFit] = useState<"contain" | "cover">("contain");
   const [margin, setMargin] = useState<"none" | "small">("none");
 
-  // We map files to generic string IDs for @dnd-kit so identity persists
-  // The simplest reliable mapping is by index arrays or wrapping them.
-  const [items, setItems] = useState<{ id: string, file: File }[]>([]);
-
-  useEffect(() => {
-    // Only re-init if file array structurally changes lengths
-    if (files.length !== items.length) {
-      setItems(files.map((f, i) => ({ id: `img-${i}-${f.name}`, file: f })));
+  // We use the existing SortableFile structure from parent if possible, 
+  // but ImageToPdf often has its own internal reordering state.
+  // Let's sync with parent files.
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+        const oldIndex = files.findIndex((item) => item.id === active.id);
+        const newIndex = files.findIndex((item) => item.id === over.id);
+        if (oldIndex !== -1 && newIndex !== -1) {
+            setFiles(arrayMove(files, oldIndex, newIndex));
+        }
     }
-  }, [files, items.length]);
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  };
-
   const handleConvert = async () => {
-    if (items.length === 0) return;
+    if (files.length === 0) return;
     try {
       setProcessing(true); setProgress(10); setError(null);
 
       const formData = new FormData();
-      // Use ordered files
-      items.forEach((item) => formData.append("files", item.file));
+      // Use ordered files from props
+      files.forEach((sf) => formData.append("files", sf.file));
       formData.append("orientation", orientation);
       formData.append("fit", fit);
       formData.append("margin", margin);
@@ -115,8 +107,8 @@ export default function ImageToPdfControls({
 
       const blob = await resp.blob();
       setResultBlob(blob);
-      const baseName = items.length > 0 ? items[0].file.name.replace(/\.[^/.]+$/, "") : "images";
-      setResultFileName(`${baseName} - Image to PDF - PDFigo by Murtuja.pdf`);
+      const baseName = files.length > 0 ? files[0].file.name.replace(/\.[^/.]+$/, "") : "images";
+      setResultFileName(`${baseName} - Image to PDF - PDFly by Murtuja.pdf`);
       setProgress(100);
     } catch (err) {
       setError(`Failed: ${err instanceof Error ? err.message : "Unknown error"}`);
@@ -130,13 +122,13 @@ export default function ImageToPdfControls({
       preview={
         <UniversalPreview
           title="Image Sequence"
-          description={`${items.length} image${items.length !== 1 ? "s" : ""} to be converted. Drag and drop to reorder.`}
+          description={`${files.length} image${files.length !== 1 ? "s" : ""} to be converted. Drag and drop to reorder.`}
           mode="vertical"
         >
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={items.map(i => i.id)} strategy={verticalListSortingStrategy}>
+            <SortableContext items={files.map(f => f.id)} strategy={verticalListSortingStrategy}>
               <div className="flex flex-col gap-6 w-full items-center pb-4">
-                {items.map((item, index) => (
+                {files.map((item, index) => (
                   <SortableImageCard
                     key={item.id}
                     id={item.id}
@@ -220,7 +212,7 @@ export default function ImageToPdfControls({
       action={
         <button
           onClick={handleConvert}
-          disabled={items.length === 0 || processing}
+          disabled={files.length === 0 || processing}
           className="btn btn-primary w-full shadow-[0_0_20px_rgba(168,85,247,0.2)]"
         >
           {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : <FileImage className="w-5 h-5" />}
