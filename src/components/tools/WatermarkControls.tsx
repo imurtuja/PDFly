@@ -13,6 +13,7 @@ import { getProtectedFiles } from "@/lib/pdf/validation";
 
 export default function WatermarkControls({
   files,
+  setFiles,
   setProcessing,
   processing,
   setProgress,

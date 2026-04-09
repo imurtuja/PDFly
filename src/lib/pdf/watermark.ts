@@ -19,7 +19,7 @@ export async function addWatermark(
   const font = await pdf.embedFont(StandardFonts.HelveticaBold);
   const pages = pdf.getPages();
 
-  let fontSize = options.fontSize ?? 48;
+  const fontSize = options.fontSize ?? 48;
   const opacity = options.opacity ?? 0.15;
   const rotation = options.rotation ?? 45;
   const color = options.color ?? { r: 0.5, g: 0.5, b: 0.5 };

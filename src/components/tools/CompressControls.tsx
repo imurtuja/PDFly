@@ -19,7 +19,7 @@ const presets: { value: PresetQuality; label: string; desc: string }[] = [
 ];
 
 export default function CompressControls({
-  files, setFiles, setProcessing, processing, setProgress, setResultBlob, setResultFileName, setError,
+  files, setFiles, setProcessing, processing, progress, setProgress, setResultBlob, setResultFileName, setError,
 }: ToolControlsProps) {
   const file = files[0]?.file || null;
   const { pages, totalPages, loading, error: loadError, isProtected } = usePdfLoader(file, true, 20);
@@ -109,8 +109,9 @@ export default function CompressControls({
 
       setStatusMessage(`Complete! Reduced by ${((1 - blob.size / file.size) * 100).toFixed(0)}%`);
       setProgress(100);
-    } catch (err: any) {
-      if (err.message === "Compilation cancelled by user" || err.message === "Cancelled by user") {
+    } catch (err: unknown) {
+      const error = err as Error;
+      if (error.message === "Compilation cancelled by user" || error.message === "Cancelled by user") {
         setStatusMessage("Task aborted.");
         setProgress(0);
       } else {

@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       const bytes = Buffer.from(await file.arrayBuffer());
 
       // Auto-orient respects EXIF metadata!
-      let pipeline = sharp(bytes).rotate();
+      const pipeline = sharp(bytes).rotate();
       
       // We must extract width/height AFTER the pipeline has executed
       // because EXIF rotation swaps dimensions.

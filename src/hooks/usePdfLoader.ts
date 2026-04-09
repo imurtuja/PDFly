@@ -58,7 +58,7 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
         setTotalPages(pdf.numPages);
 
         const pagesToRender = loadAll ? pdf.numPages : Math.min(pdf.numPages, initialLimit);
-        let results: PdfPageData[] = [];
+        const results: PdfPageData[] = [];
 
         // Chunk processing to avoid blocking main thread
         const chunk = 3;
@@ -88,8 +88,9 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
             }
           }
         }
-      } catch (err: any) {
-        const isPasswordError = err.name === "PasswordException" || err.code === 1;
+      } catch (err: unknown) {
+        const error = err as { name?: string; code?: number; message?: string };
+        const isPasswordError = error.name === "PasswordException" || error.code === 1;
         if (!isPasswordError) {
           console.error("PDF Preview Error:", err);
         }

@@ -23,8 +23,9 @@ export async function getProtectedFiles(files: File[]): Promise<File[]> {
       // pdf-lib will throw during load if the file is encrypted, 
       // as it does not support encrypted PDFs.
       await PDFDocument.load(bytes);
-    } catch (err: any) {
-      const message = err.message?.toLowerCase() || "";
+    } catch (err: unknown) {
+      const error = err as Error;
+      const message = error.message?.toLowerCase() || "";
       
       // Check for specific encryption-related keywords in the error message
       if (

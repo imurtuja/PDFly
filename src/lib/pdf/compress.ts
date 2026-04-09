@@ -36,7 +36,7 @@ export interface CompressOptions {
 const sleep = (ms = 0) => new Promise(r => setTimeout(r, ms));
 
 async function renderPageToImage(
-    page: any, 
+    page: PdfJs.PDFPageProxy, 
     scale: number, 
     quality: number, 
     format: 'image/jpeg' | 'image/png',
@@ -65,7 +65,8 @@ async function renderPageToImage(
     const renderContext = {
       canvasContext: ctx,
       viewport: viewport,
-    } as any;
+      canvas: canvas
+    };
     
     const renderTask = page.render(renderContext);
     
@@ -73,8 +74,9 @@ async function renderPageToImage(
        const checkInterval = setInterval(() => {
            if (shouldCancel()) renderTask.cancel();
        }, 100);
-       await renderTask.promise.catch((e: any) => {
-           if (e.name === 'RenderingCancelledException') return;
+       await renderTask.promise.catch((e: unknown) => {
+           const err = e as Error;
+           if (err.name === 'RenderingCancelledException') return;
            throw e;
        });
        clearInterval(checkInterval);
@@ -122,7 +124,7 @@ async function buildPdfFromImages(file: File, scale: number, quality: number, fo
     
     // MEMORY OPTIMIZATION: We do NOT store an array of images.
     // We stream them page-by-page into jsPDF.
-    let doc: any = null;
+    let doc: JsPdfType | null = null;
     
     for (let i = 1; i <= totalPages; i++) {
         if (shouldCancel && shouldCancel()) throw new Error("Cancelled by user");
