@@ -36,7 +36,7 @@ export default function Navbar() {
               <FileText className="w-5 h-5 text-white relative z-10" />
             </div>
           </div>
-          <div className="hidden sm:flex flex-col justify-center">
+          <div className="flex flex-col justify-center">
             <span className="text-xl font-black text-white tracking-tighter leading-none font-display">
               PDF<span className="text-purple-500">ly</span>
             </span>
