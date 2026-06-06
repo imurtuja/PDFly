@@ -42,8 +42,9 @@ export function usePdfLoader(file: File | null, loadAll: boolean = false, initia
       setPages([]);
 
       try {
-        const pdfjsLib = await import("pdfjs-dist");
-        const workerUrl = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+        // @ts-ignore
+        const pdfjsLib = await import(/* webpackIgnore: true */ "https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.min.mjs");
+        const workerUrl = `https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.worker.min.mjs`;
         pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl;
 
         const arrayBuffer = await file!.arrayBuffer();

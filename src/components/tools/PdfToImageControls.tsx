@@ -38,8 +38,10 @@ export default function PdfToImageControls({
 
     try {
       setProcessing(true); setProgress(10); setError(null);
-      const pdfjsLib = await import("pdfjs-dist");
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+      // @ts-ignore
+      const pdfjsLib = await import(/* webpackIgnore: true */ "https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.min.mjs");
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.worker.min.mjs`;
+
       const bytes = await file.arrayBuffer();
       const pdfDoc = await pdfjsLib.getDocument({ data: bytes }).promise;
       const numPages = pdfDoc.numPages;

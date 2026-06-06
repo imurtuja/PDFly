@@ -10,14 +10,17 @@ async function initLibs() {
     if (typeof window === 'undefined') return;
     if (pdfjsLib && jsPDF) return;
 
-    pdfjsLib = await import('pdfjs-dist');
+    try {
+        if (!pdfjsLib) {
+            // @ts-ignore
+            pdfjsLib = await import(/* webpackIgnore: true */ "https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.min.mjs");
+            pdfjsLib!.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@5.6.205/build/pdf.worker.min.mjs`;
+        }
+    } catch (e) {
+        console.warn('Could not load pdfjs-dist natively, compression preview generation skipped', e);
+    }
     const jspdfModule = await import('jspdf');
     jsPDF = jspdfModule.jsPDF;
-
-    // Set up worker
-    if (pdfjsLib && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
-    }
 }
 
 export interface CompressProgress {
